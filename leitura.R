@@ -2,9 +2,10 @@
 library(tidyverse)
 library(rvest)
 library(webdriver)
+library(googlesheets4)
+
 
 le_artigos <- function(endereco = "pesquisas/_game theory_ _software engineering_ - Google Scholar.html"){
-
 
 
   pagina <- read_html(endereco) %>% 
@@ -37,7 +38,9 @@ le_artigos <- function(endereco = "pesquisas/_game theory_ _software engineering
   anos <- read_html(endereco) %>% 
     html_elements(css = ".gs_a") %>% 
     html_text() %>% 
-    str_extract(pattern = "[0-9]{4}")
+    str_extract(pattern = "[0-9]{4}" ) 
+  
+
   
   autores <- read_html(endereco) %>% 
     html_elements(css = ".gs_a") %>% 
@@ -86,10 +89,23 @@ le_artigos <- function(endereco = "pesquisas/_game theory_ _software engineering
 
 arquivos <- list.files(path = "pesquisas", pattern = "*.html", full.names = TRUE)
 
+
 artigos <- arquivos %>% 
   map_df(
     .f = le_artigos
   ) %>% 
   select(-name) %>% 
   distinct()
+
+
+# arquivo_antigos <- "https://docs.google.com/spreadsheets/d/18pnMrFKuuu8WYCyD1xkWUhVx9sIN8VHlSQOS-Hz6X_8"
+# 
+# antigos <- googlesheets4::read_sheet(ss = arquivo_antigos, sheet = "post_Carlos" )
+
+
+
+
+
+
+
 
